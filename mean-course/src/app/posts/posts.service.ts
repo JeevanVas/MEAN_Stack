@@ -1,0 +1,18 @@
+import { Injectable } from '@angular/core';
+
+import { Post } from './posts.model';
+
+@Injectable({providedIn: 'root'})
+export class PostsService {
+  private posts: Post[] = [];
+
+  getPosts() {
+    return [...this.posts];
+  }
+
+  addPost(title: string, content: string) {
+    // tslint:disable-next-line: object-literal-shorthand
+    const post: Post = {title: title, content: content};
+    this.posts.push(post);
+  }
+}
