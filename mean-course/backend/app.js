@@ -1,23 +1,20 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const Post = require('./models/post');
+const postsRoutes = require("./routes/posts");
 
 const app = express();
 
-// mongoDB Atlas:
-// jeevanmvas
-// pwd - as3cvKseCiujpsma
-// Current IP address - 121.244.199.178 (Sonata GV2 BG4WS0850)
-
-// 'node-angular' is name of DB created on the fly
-mongoose.connect('mongodb+srv://jeevanmvas:as3cvKseCiujpsma@cluster0-uid3b.mongodb.net/node-angular?retryWrites=true&w=majority', {useNewUrlParser: true})
+mongoose
+  .connect(
+    'mongodb+srv://jeevanmvas:as3cvKseCiujpsma@cluster0-uid3b.mongodb.net/node-angular?retryWrites=true&w=majority'
+  )
   .then(() => {
-    console.log('Connected to database!');
+    console.log("Connected to database!");
   })
   .catch(() => {
-    console.log('Connection failed');
+    console.log("Connection failed!");
   });
 
 app.use(bodyParser.json());
@@ -31,41 +28,11 @@ app.use((req, res, next) => {
   );
   res.setHeader(
     "Access-Control-Allow-Methods",
-    "GET, POST, PATCH, DELETE, OPTIONS"
+    "GET, POST, PATCH, PUT, DELETE, OPTIONS"
   );
   next();
 });
 
-app.post("/api/posts", (req, res, next) => {
-  const post = new Post({
-    title: req.body.title,
-    content: req.body.content
-  });
-  post.save()
-  .then(createdPost => {
-    res.status(201).json({
-      message: 'Post added successfully',
-      postId: createdPost._id
-    });
-  });
-});
-
-app.get("/api/posts", (req, res, next) => {
-  Post.find()
-  .then(documents => {
-    res.status(200).json({
-      message: "Posts fetched successfully!",
-      posts: documents
-    });
-  })
-});
-
-app.delete("/api/posts/:id", (req, res, next) => {
-  Post.deleteOne({ _id: req.params.id})
-  .then(result => {
-    console.log(result);
-    res.status(200).json({message: 'Post deleted!'});
-  })
-})
+app.use("/api/posts", postsRoutes);
 
 module.exports = app;
