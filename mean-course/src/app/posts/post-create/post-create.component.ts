@@ -56,7 +56,7 @@ export class PostCreateComponent implements OnInit {
             title: this.post.title,
             content: this.post.content,
             image: this.post.imagePath
-          })
+          });
         });
       } else {
         this.mode = "create";
@@ -78,6 +78,7 @@ export class PostCreateComponent implements OnInit {
 
   onSavePost() {
     if (this.form.invalid) {
+      alert('Please upload all the fields');
       return;
     }
     this.isLoading = true;
